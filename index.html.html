@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splash Studio — Professional Video Editing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #7a6030;
+    --bg: #080808;
+    --bg2: #0f0f0f;
+    --bg3: #161616;
+    --text: #f0ece0;
+    --text-muted: #888070;
+    --border: rgba(201,168,76,0.15);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.95);
+    border-bottom-color: var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.5rem 1.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--bg); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 4rem 4rem;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(201,168,76,0.02) 80px,
+      rgba(201,168,76,0.02) 81px
+    );
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  h1 .accent { color: var(--gold); }
+  .hero-sub {
+    margin-top: 1.8rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 520px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--bg);
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(240,236,224,0.2);
+    color: var(--text);
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-stats {
+    position: absolute;
+    right: 4rem;
+    bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    opacity: 0;
+    animation: fadeLeft 0.8s 1s forwards;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+  }
+  .scroll-hint span {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* SECTIONS */
+  section { padding: 7rem 4rem; }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-label::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 40px;
+    background: var(--gold-dim);
+  }
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  /* ABOUT */
+  .about { background: var(--bg2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    aspect-ratio: 4/5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-img-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, transparent 60%);
+  }
+  .about-monogram {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(201,168,76,0.15);
+    letter-spacing: 0.1em;
+  }
+  .about-badge {
+    position: absolute;
+    bottom: -1.5rem;
+    right: -1.5rem;
+    background: var(--gold);
+    color: var(--bg);
+    padding: 1rem 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+  .about-text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 500; }
+  .tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .tool-tag {
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    padding: 0.35rem 0.9rem;
+    text-transform: uppercase;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: var(--border);
+  }
+  .service-card {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--gold);
+    transition: height 0.4s;
+  }
+  .service-card:hover { background: var(--bg3); }
+  .service-card:hover::before { height: 100%; }
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: rgba(201,168,76,0.1);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .service-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .service-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 0.8rem;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+  .service-items {
+    margin-top: 1rem;
+    list-style: none;
+  }
+  .service-items li {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .service-items li::before {
+    content: '→';
+    color: var(--gold-dim);
+    font-size: 0.7rem;
+  }
+
+  /* PORTFOLIO */
+  .portfolio { background: var(--bg2); }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: var(--border);
+  }
+  .portfolio-item {
+    background: var(--bg3);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: all 0.3s;
+  }
+  .portfolio-item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+  .portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(201,168,76,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-overlay-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--bg);
+    letter-spacing: 0.1em;
+  }
+  .portfolio-overlay-sub {
+    font-size: 0.75rem;
+    color: rgba(8,8,8,0.7);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+  .portfolio-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portfolio-bg-icon {
+    font-size: 4rem;
+    opacity: 0.06;
+  }
+  .portfolio-label {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .portfolio-label-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--text);
+  }
+  .portfolio-label-count {
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .testimonial-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+  }
+  .testimonial-card::before {
+    content: '"';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    top: 0.5rem;
+    left: 1.5rem;
+    line-height: 1;
+  }
+  .testimonial-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .author-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+  }
+  .author-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .author-role {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .stars {
+    color: var(--gold);
+    font-size: 0.75rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* PRICING */
+  .pricing { background: var(--bg2); }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: var(--border);
+  }
+  .pricing-card {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pricing-card.featured {
+    background: var(--bg3);
+    border-top: 2px solid var(--gold);
+  }
+  .pricing-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .pricing-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .pricing-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .pricing-price span { font-size: 1.5rem; }
+  .pricing-period {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+  .pricing-features li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--gold);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+  .contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-info-icon {
+    width: 42px; height: 42px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .contact-info-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+  }
+  .contact-info-value {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .contact-info-value a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .contact-info-value a:hover { color: var(--gold); }
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .contact-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .contact-link-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+  .contact-link-btn span { color: var(--text-muted); font-size: 0.75rem; margin-left: auto; }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.3; transform: scaleY(0.6); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 6rem 1.5rem 4rem; }
+    h1 { font-size: 4rem; }
+    .hero-stats { display: none; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-item:first-child { grid-column: span 2; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">SPLASH<span>STUDIO</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20your%20services!" class="nav-cta" target="_blank">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <div class="hero-tag">VSL & Video Editing Specialist</div>
+    <h1>TURNING<br><span class="accent">RAW</span><br>FOOTAGE<br>INTO <span class="accent">GOLD</span></h1>
+    <p class="hero-sub">Professional video editing for coaches, educators & online entrepreneurs. VSLs, course videos, product ads — crafted to convert.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20your%20services!" class="btn-primary" target="_blank">Start a Project</a>
+      <a href="#portfolio" class="btn-secondary">View Portfolio</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Projects Delivered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Global Studios</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-img-box">
+        <div class="about-monogram">MF</div>
+        <div class="about-badge">CEO &<br>Founder</div>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label">About Me</div>
+      <h2>MUZAMMIL<br>FAROOQ</h2>
+      <p>I'm the founder and CEO of <strong>Splash Studio (USA)</strong> and <strong>Tecom Digital Studio (UAE)</strong> — two professional studios delivering world-class video editing and digital content solutions for clients worldwide.</p>
+      <p>With <strong>6+ years of experience</strong> and a team of 8 skilled professionals, we specialize in helping coaches, educators, and online entrepreneurs turn raw footage into high-converting, polished content.</p>
+      <p>Certified in <strong>Camtasia 2025</strong> and expert in <strong>Adobe Premiere Pro 2025</strong> — I bring both technical precision and creative vision to every project.</p>
+      <div class="tools-list">
+        <span class="tool-tag">Premiere Pro 2025</span>
+        <span class="tool-tag">Camtasia 2025</span>
+        <span class="tool-tag">After Effects</span>
+        <span class="tool-tag">DaVinci Resolve</span>
+        <span class="tool-tag">Canva</span>
+        <span class="tool-tag">PowerPoint</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">What I Do</div>
+    <h2>CORE SERVICES</h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">🎬</div>
+      <div class="service-title">VSL Editing</div>
+      <div class="service-desc">High-converting Video Sales Letters that drive results for coaches and entrepreneurs.</div>
+      <ul class="service-items">
+        <li>Script-to-screen production</li>
+        <li>Motion graphics & popups</li>
+        <li>Audio & video syncing</li>
+        <li>Color grading & correction</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">📚</div>
+      <div class="service-title">Course & E-Learning</div>
+      <div class="service-desc">Professional course video editing and slide creation for educators worldwide.</div>
+      <ul class="service-items">
+        <li>Course module editing</li>
+        <li>Slide design (PPT, Canva)</li>
+        <li>Custom animations</li>
+        <li>SCORM-compatible output</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">🛒</div>
+      <div class="service-title">Product Videos</div>
+      <div class="service-desc">Scroll-stopping product videos for Amazon, Shopify, Etsy & social media ads.</div>
+      <ul class="service-items">
+        <li>Product showcase videos</li>
+        <li>Amazon & Shopify listings</li>
+        <li>4K / 8K resolution output</li>
+        <li>Animated feature highlights</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">📱</div>
+      <div class="service-title">Social Media Videos</div>
+      <div class="service-desc">Reels, TikToks, YouTube videos and carousel ads engineered for engagement.</div>
+      <ul class="service-items">
+        <li>YouTube video editing</li>
+        <li>TikTok & Instagram Reels</li>
+        <li>Mobile carousel ads</li>
+        <li>Subtitles & captions</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">🏠</div>
+      <div class="service-title">Real Estate Videos</div>
+      <div class="service-desc">Cinematic property tours and real estate ads that sell homes faster.</div>
+      <ul class="service-items">
+        <li>Property walkthrough tours</li>
+        <li>Real estate listing ads</li>
+        <li>Drone footage editing</li>
+        <li>Professional music & voice</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">🤖</div>
+      <div class="service-title">AI-Powered Content</div>
+      <div class="service-desc">AI video creation, voiceovers and digital content for next-gen brands.</div>
+      <ul class="service-items">
+        <li>AI-generated visuals</li>
+        <li>Professional voiceovers</li>
+        <li>AI eLearning development</li>
+        <li>Bulk video solutions</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="reveal">
+    <div class="section-label">My Work</div>
+    <h2>PORTFOLIO</h2>
+  </div>
+  <div class="portfolio-grid reveal">
+    <div class="portfolio-item">
+      <div class="portfolio-bg"><div class="portfolio-bg-icon">🎬</div></div>
+      <div class="portfolio-label">
+        <div class="portfolio-label-title">Video Sales Letters</div>
+        <div class="portfolio-label-count">4 Projects</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-overlay-title">VSL Projects</div>
+        <div class="portfolio-overlay-sub">Health, Coaching & More</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg"><div class="portfolio-bg-icon">🛒</div></div>
+      <div class="portfolio-label">
+        <div class="portfolio-label-title">Product Videos</div>
+        <div class="portfolio-label-count">8 Projects</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-overlay-title">E-Commerce</div>
+        <div class="portfolio-overlay-sub">Amazon, Shopify & Etsy</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg"><div class="portfolio-bg-icon">📱</div></div>
+      <div class="portfolio-label">
+        <div class="portfolio-label-title">Mobile Ads</div>
+        <div class="portfolio-label-count">4 Projects</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-overlay-title">Carousel Ads</div>
+        <div class="portfolio-overlay-sub">Instagram & TikTok</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg"><div class="portfolio-bg-icon">📚</div></div>
+      <div class="portfolio-label">
+        <div class="portfolio-label-title">Course Videos</div>
+        <div class="portfolio-label-count">6 Projects</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-overlay-title">E-Learning</div>
+        <div class="portfolio-overlay-sub">Educational Content</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg"><div class="portfolio-bg-icon">🖼️</div></div>
+      <div class="portfolio-label">
+        <div class="portfolio-label-title">Digital Ads</div>
+        <div class="portfolio-label-count">4 Designs</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-overlay-title">Banners & Ads</div>
+        <div class="portfolio-overlay-sub">Listing & Display</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 2rem; text-align:center;" class="reveal">
+    <a href="https://sites.google.com/view/splashstudio/portfolio" class="btn-secondary" target="_blank">View Full Portfolio →</a>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="reveal">
+    <div class="section-label">Client Reviews</div>
+    <h2>WHAT CLIENTS SAY</h2>
+  </div>
+  <div class="testimonials-grid reveal">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">Muzammil delivered an outstanding VSL for my coaching program. The quality was cinematic, the turnaround was fast, and it actually increased my conversion rate. Highly recommend!</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">JR</div>
+        <div>
+          <div class="author-name">James R.</div>
+          <div class="author-role">Business Coach, USA</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">Best investment I made for my online course. The editing was clean, professional, and exactly what I envisioned. Will definitely work with Splash Studio again.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">SK</div>
+        <div>
+          <div class="author-name">Sarah K.</div>
+          <div class="author-role">Online Educator, UK</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">Our product videos went live on Amazon and sales jumped within the first week. Muzammil really understands what makes a video convert. 10/10 experience.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">AH</div>
+        <div>
+          <div class="author-name">Ahmed H.</div>
+          <div class="author-role">E-Commerce Seller, UAE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="reveal">
+    <div class="section-label">Investment</div>
+    <h2>PRICING PLANS</h2>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <div class="pricing-tag">Starter</div>
+      <div class="pricing-name">Basic Edit</div>
+      <div class="pricing-price"><span>$</span>49</div>
+      <div class="pricing-period">per video</div>
+      <ul class="pricing-features">
+        <li>Up to 5 minutes video</li>
+        <li>Color correction</li>
+        <li>Basic transitions</li>
+        <li>Background music</li>
+        <li>2 revisions</li>
+        <li>3-day delivery</li>
+      </ul>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20the%20Basic%20plan!" class="btn-secondary" target="_blank" style="display:block; text-align:center;">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-tag">★ Most Popular</div>
+      <div class="pricing-name">Pro VSL</div>
+      <div class="pricing-price"><span>$</span>149</div>
+      <div class="pricing-period">per project</div>
+      <ul class="pricing-features">
+        <li>Full VSL production</li>
+        <li>Motion graphics & popups</li>
+        <li>Color grading</li>
+        <li>Audio syncing & cleanup</li>
+        <li>Subtitles included</li>
+        <li>Unlimited revisions</li>
+        <li>5-day delivery</li>
+      </ul>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20the%20Pro%20VSL%20plan!" class="btn-primary" target="_blank" style="display:block; text-align:center;">Get Started</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tag">Enterprise</div>
+      <div class="pricing-name">Bulk Package</div>
+      <div class="pricing-price"><span>$</span>399</div>
+      <div class="pricing-period">per month</div>
+      <ul class="pricing-features">
+        <li>10+ videos per month</li>
+        <li>Dedicated editor</li>
+        <li>Priority turnaround</li>
+        <li>All formats & platforms</li>
+        <li>Course + VSL + Ads</li>
+        <li>Unlimited revisions</li>
+        <li>24/7 support</li>
+      </ul>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20the%20Bulk%20Package!" class="btn-secondary" target="_blank" style="display:block; text-align:center;">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label">Get In Touch</div>
+    <h2>LET'S WORK<br>TOGETHER</h2>
+  </div>
+  <div class="contact-grid reveal">
+    <div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">✉</div>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-value"><a href="mailto:splashstudio.usa@gmail.com">splashstudio.usa@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📍</div>
+        <div>
+          <div class="contact-info-label">Location</div>
+          <div class="contact-info-value">Texas City, USA & UAE</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">⏱</div>
+        <div>
+          <div class="contact-info-label">Response Time</div>
+          <div class="contact-info-value">Within 2 hours</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.7; margin-bottom:1.5rem;">Ready to transform your footage into professional content that converts? Reach out via any platform below — I respond fast.</p>
+      <div class="contact-links">
+        <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20your%20services!" class="contact-link-btn" target="_blank">
+          <span style="font-size:1.2rem;">💬</span> WhatsApp Me <span>Fastest response →</span>
+        </a>
+        <a href="mailto:splashstudio.usa@gmail.com" class="contact-link-btn">
+          <span style="font-size:1.2rem;">✉</span> Send an Email <span>splashstudio.usa@gmail.com</span>
+        </a>
+        <a href="https://www.linkedin.com/in/splashstudioz/" class="contact-link-btn" target="_blank">
+          <span style="font-size:1.2rem;">💼</span> LinkedIn <span>Connect professionally →</span>
+        </a>
+        <a href="https://www.fiverr.com/s/99XqL1E" class="contact-link-btn" target="_blank">
+          <span style="font-size:1.2rem;">🟢</span> Fiverr Profile <span>Order directly →</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SPLASH STUDIO</div>
+  <div class="footer-copy">© 2025 Splash Studio. All Rights Reserved. | Muzammil Farooq</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
