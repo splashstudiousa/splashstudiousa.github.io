@@ -430,6 +430,58 @@
     font-size: 0.7rem;
   }
 
+  /* VIDEO PORTFOLIO */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .video-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .video-card:hover { border-color: var(--gold); }
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+  }
+  .video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .video-info {
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .video-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 2px 8px;
+    flex-shrink: 0;
+  }
+  .video-title {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .video-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
   /* PORTFOLIO */
   .portfolio { background: var(--bg2); }
   .portfolio-grid {
@@ -513,7 +565,7 @@
   /* TESTIMONIALS */
   .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin-top: 3rem;
   }
@@ -935,6 +987,62 @@
   <div class="reveal">
     <div class="section-label">My Work</div>
     <h2>PORTFOLIO</h2>
+    <p style="color:var(--text-muted); font-size:0.95rem; margin-top:0.5rem;">Real client projects — Slide Based VSL Videos</p>
+  </div>
+
+  <div class="video-grid reveal">
+    <div class="video-card">
+      <div class="video-wrap">
+        <video controls preload="metadata">
+          <source src="VSL_with_slides____1_.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">VSL</div>
+        <div class="video-title">Slide Based VSL — Vol. 1</div>
+        <div class="video-sub">Professional Video Sales Letter</div>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-wrap">
+        <video controls preload="metadata">
+          <source src="VSL_with_slides____3_.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">VSL</div>
+        <div class="video-title">Slide Based VSL — Vol. 2</div>
+        <div class="video-sub">Professional Video Sales Letter</div>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-wrap">
+        <video controls preload="metadata">
+          <source src="VSL_with_slides____5_.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">VSL</div>
+        <div class="video-title">Slide Based VSL — Vol. 3</div>
+        <div class="video-sub">Professional Video Sales Letter</div>
+      </div>
+    </div>
+    <div class="video-card">
+      <div class="video-wrap">
+        <video controls preload="metadata">
+          <source src="VSL_with_slides____6_.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">VSL</div>
+        <div class="video-title">Slide Based VSL — Vol. 4</div>
+        <div class="video-sub">Professional Video Sales Letter</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;" class="reveal">
+    <div class="section-label">Browse By Category</div>
   </div>
   <div class="portfolio-grid reveal">
     <div class="portfolio-item">
@@ -1006,35 +1114,57 @@
   </div>
   <div class="testimonials-grid reveal">
     <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <div class="testimonial-text">Muzammil delivered an outstanding VSL for my coaching program. The quality was cinematic, the turnaround was fast, and it actually increased my conversion rate. Highly recommend!</div>
+      <div class="stars">★★★★★ &nbsp; 5.0 — Fiverr Verified</div>
+      <div class="testimonial-text">This guy is great as a VSL maker. Don't hesitate to work with him. This is my 2nd time and looking forward to working with him again.</div>
       <div class="testimonial-author">
-        <div class="author-avatar">JR</div>
+        <div class="author-avatar">RB</div>
         <div>
-          <div class="author-name">James R.</div>
-          <div class="author-role">Business Coach, USA</div>
+          <div class="author-name">Richard Brun 🇨🇦</div>
+          <div class="author-role">VSL Client, Canada</div>
         </div>
       </div>
     </div>
     <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <div class="testimonial-text">Best investment I made for my online course. The editing was clean, professional, and exactly what I envisioned. Will definitely work with Splash Studio again.</div>
+      <div class="stars">★★★★★ &nbsp; 5.0 — Fiverr Verified</div>
+      <div class="testimonial-text">Looking for creating a VSL? This freelancer is your guy. I like to work with people who understand me, communicate, and are willing to work hard for great results. This is what Zaim delivers. He is a rising star on Fiverr. I will come back any time and highly recommend him to you.</div>
       <div class="testimonial-author">
-        <div class="author-avatar">SK</div>
+        <div class="author-avatar">CA</div>
         <div>
-          <div class="author-name">Sarah K.</div>
-          <div class="author-role">Online Educator, UK</div>
+          <div class="author-name">Verified Buyer 🇨🇦</div>
+          <div class="author-role">Body Fat Burn Code VSL, Canada</div>
         </div>
       </div>
     </div>
     <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <div class="testimonial-text">Our product videos went live on Amazon and sales jumped within the first week. Muzammil really understands what makes a video convert. 10/10 experience.</div>
+      <div class="stars">★★★★★ &nbsp; 5.0 — Fiverr Verified</div>
+      <div class="testimonial-text">Muzammil is a very responsive and hardworking person. He is very professional and delivered my work on time. I highly recommend him for video editing work. If you need a great highly professional person for your work, you can contact him. I really enjoyed working with him.</div>
       <div class="testimonial-author">
-        <div class="author-avatar">AH</div>
+        <div class="author-avatar">CT</div>
         <div>
-          <div class="author-name">Ahmed H.</div>
-          <div class="author-role">E-Commerce Seller, UAE</div>
+          <div class="author-name">Chelsea Taylor</div>
+          <div class="author-role">Video Editing Client</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★ &nbsp; 5.0 — Verified</div>
+      <div class="testimonial-text">Zaim (Splash Studios) builds a new, significantly stronger body version, immediately improving the project. A project that had been stuck in revision loops for ~6 months finally started moving forward once Zaim / Splash Studios stepped in.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">TP</div>
+        <div>
+          <div class="author-name">Turning Point</div>
+          <div class="author-role">VSL Project, Jan 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★ &nbsp; 5.0 — Fiverr Verified</div>
+      <div class="testimonial-text">Amazing work, asked good professional questions, delivered on time to spec and no revisions required! Booking another job shortly!</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">PB</div>
+        <div>
+          <div class="author-name">Pamella Bisson</div>
+          <div class="author-role">Video Editing Client</div>
         </div>
       </div>
     </div>
