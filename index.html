@@ -310,6 +310,13 @@
     position: relative;
     overflow: hidden;
   }
+  .about-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
   .about-img-box::before {
     content: '';
     position: absolute;
@@ -819,7 +826,7 @@
   <div class="about-grid">
     <div class="about-img-wrap reveal">
       <div class="about-img-box">
-        <div class="about-monogram">MF</div>
+        <img src="Zaim.jpg" alt="Muzammil Farooq — Founder of Splash Studio" />
         <div class="about-badge">CEO &<br>Founder</div>
       </div>
     </div>
