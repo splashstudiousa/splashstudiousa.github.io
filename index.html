@@ -626,7 +626,74 @@
     margin-bottom: 0.8rem;
   }
 
-   /* CONTACT */
+  /* PRICING */
+  .pricing { background: var(--bg2); }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 3rem;
+    background: var(--border);
+  }
+  .pricing-card {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .pricing-card.featured {
+    background: var(--bg3);
+    border-top: 2px solid var(--gold);
+  }
+  .pricing-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .pricing-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .pricing-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .pricing-price span { font-size: 1.5rem; }
+  .pricing-period {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+  .pricing-features li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--gold);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  /* CONTACT */
   .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -694,6 +761,66 @@
   }
   .contact-link-btn span { color: var(--text-muted); font-size: 0.75rem; margin-left: auto; }
 
+  /* BLOG */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .blog-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .blog-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .blog-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .blog-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(201,168,76,0.1);
+    color: var(--gold);
+    padding: 0.2rem 0.7rem;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .blog-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .blog-icon { font-size: 2rem; }
+  .blog-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .blog-excerpt {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .blog-read-more {
+    font-size: 0.75rem;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: letter-spacing 0.3s;
+  }
+  .blog-read-more:hover { letter-spacing: 0.15em; }
+
   /* FOOTER */
   footer {
     background: var(--bg);
@@ -748,6 +875,7 @@
     .hero-stats { display: none; }
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
     .services-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .blog-grid { grid-template-columns: 1fr; }
     .testimonials-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
     .portfolio-item:first-child { grid-column: span 2; }
@@ -767,7 +895,7 @@
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#portfolio">Portfolio</a></li>
-    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#blog">Blog</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20am%20interested%20in%20your%20services!" class="nav-cta" target="_blank">Hire Me</a>
@@ -1091,7 +1219,56 @@
     </div>
   </div>
 </section>
+
+
+
+<!-- BLOG -->
+<section id="blog" style="background: var(--bg2);">
+  <div class="reveal">
+    <div class="section-label">Tips & Insights</div>
+    <h2>LATEST BLOG POSTS</h2>
+    <p style="color:var(--text-muted); font-size:0.95rem; margin-top:0.5rem; max-width:520px;">Video editing tips, freelancing advice, and AI tools to help you grow your career.</p>
+  </div>
+  <div class="blog-grid reveal">
+
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <div class="blog-tag">VSL Tips</div>
+        <div class="blog-date">May 2026</div>
+      </div>
+      <div class="blog-icon">🎬</div>
+      <h3 class="blog-title">5 VSL Mistakes That Kill Conversions (And How to Fix Them)</h3>
+      <p class="blog-excerpt">Most VSLs fail not because of the product — but because of bad editing. Here are the 5 most common mistakes I see and how to fix each one fast.</p>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20read%20your%20blog!" class="blog-read-more" target="_blank">Read More →</a>
+    </div>
+
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <div class="blog-tag">Freelancing</div>
+        <div class="blog-date">Apr 2026</div>
+      </div>
+      <div class="blog-icon">💼</div>
+      <h3 class="blog-title">How I Built a Free Portfolio Website in 30 Minutes Using Claude AI</h3>
+      <p class="blog-excerpt">No coding. No monthly fees. Just Claude AI and GitHub Pages. Here's the exact step-by-step process I used to build a professional website for free.</p>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20read%20your%20blog!" class="blog-read-more" target="_blank">Read More →</a>
+    </div>
+
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <div class="blog-tag">AI Tools</div>
+        <div class="blog-date">Mar 2026</div>
+      </div>
+      <div class="blog-icon">🤖</div>
+      <h3 class="blog-title">Top 5 AI Tools Every Freelance Video Editor Should Use in 2026</h3>
+      <p class="blog-excerpt">AI is changing video editing forever. These 5 tools will save you hours every week and help you deliver better results to your clients.</p>
+      <a href="https://wa.me/923217573714?text=Hello%20Muzammil%2C%20I%20read%20your%20blog!" class="blog-read-more" target="_blank">Read More →</a>
+    </div>
+
+  </div>
+</section>
+
 <!-- CONTACT -->
+
 <section id="contact">
   <div class="reveal">
     <div class="section-label">Get In Touch</div>
